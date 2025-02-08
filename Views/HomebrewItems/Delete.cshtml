@@ -1,0 +1,97 @@
+﻿@model Super_Simple_Homebrew_Hoster.Models.HomebrewItem
+
+@{
+    ViewData["Title"] = "Delete";
+
+    var itemTitle = Html.DisplayFor(model => model.Title);
+    var mdContent = Html.DisplayFor(model => model.Content);
+}
+
+<h3>Are you sure you want to delete "@itemTitle"?</h3>
+<div>
+    <dl class = "row">
+        <dt class = "py-1 col-sm-2">
+            @Html.DisplayNameFor(model => model.Title)
+        </dt>
+        <dd class = "py-1 col-sm-10">
+            @Html.DisplayFor(model => model.Title)
+        </dd>
+        <dt class = "py-1 col-sm-2">
+            @Html.DisplayNameFor(model => model.Type)
+        </dt>
+        <dd class = "py-1 col-sm-10">
+            @Html.DisplayFor(model => model.Type)
+        </dd>
+        <dt class = "py-1 col-sm-2">
+            @Html.DisplayNameFor(model => model.Version)
+        </dt>
+        <dd class = "py-1 col-sm-10">
+            @Html.DisplayFor(model => model.Version)
+        </dd>
+        <dt class = "py-1 col-sm-2">
+            @Html.DisplayNameFor(model => model.Source)
+        </dt>
+        <dd class = "py-1 col-sm-10">
+            @Html.DisplayFor(model => model.Source)
+        </dd>
+        <dt class = "py-1 col-sm-2">
+            @Html.DisplayNameFor(model => model.System)
+        </dt>
+        <dd class = "py-1 col-sm-10">
+            @Html.DisplayFor(model => model.System)
+        </dd>
+        <dt class = "py-1 col-sm-2">
+            @Html.DisplayNameFor(model => model.Author)
+        </dt>
+        <dd class = "py-1 col-sm-10">
+            @Html.DisplayFor(model => model.Author)
+        </dd>
+        <dt class = "py-1 col-sm-2">
+            @Html.DisplayNameFor(model => model.ReleaseDate)
+        </dt>
+        <dd class = "py-1 col-sm-10">
+            @Html.DisplayFor(model => model.ReleaseDate)
+        </dd>
+        <dt class = "py-1 col-sm-2">
+            @Html.DisplayNameFor(model => model.Link)
+        </dt>
+        <dd class = "py-1 col-sm-10">
+            @Html.DisplayFor(model => model.Link)
+        </dd>
+        <dt class = "py-1 col-sm-2">
+            @Html.DisplayNameFor(model => model.Content)
+        </dt>
+    </dl>
+    <div>
+        <!-- TinyMCE integrated WYSIWYG editor for Content field -->
+        <div class="form-group mb-3" style="min-width: 35vw !important; width: 70vw; height: 100% !important">
+            <textarea asp-for="Content" class="form-control text-muted">
+                @mdContent
+            </textarea>
+            <span asp-validation-for="Content" class="text-danger"></span>
+        </div>
+    </div>
+    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="Delete" class = "btn btn-danger" /> |
+        <a asp-action="Index">Back to List</a>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <!-- Initialise TinyMCE WYSIWYG editor -->
+    <script>
+        tinymce.init({
+            selector: 'textarea',
+            editable_root: false,
+            height: '100vh',
+            plugins: 'anchor autolink charmap codesample lists table visualblocks wordcount linkchecker',
+            toolbar: false,
+        });
+    </script>
+}

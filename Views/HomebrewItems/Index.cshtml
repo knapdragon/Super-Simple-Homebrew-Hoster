@@ -1,0 +1,83 @@
+﻿@model Super_Simple_Homebrew_Hoster.Models.HomebrewItemSystemViewModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Homebrew Index</h1>
+
+<p>A list of TTRPG homebrew creations</p>
+
+<p>
+    <a asp-action="Create">+ Create New</a>
+</p>
+
+<form asp-controller="HomebrewItems" asp-action="Index" method="get">
+	<p>
+        System(s): 
+        <select asp-for="ItemSystem" asp-items="Model.Systems">
+            
+            <option value="">All</option>
+        </select>
+
+        <p>
+            <label>Title: <input type="text" name="titleSearch" /></label>
+		    <input type="submit" value="Search" />
+	    </p>
+    </p>
+</form>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.HomebrewItems![0].Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.HomebrewItems![0].Type)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.HomebrewItems![0].Source)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.HomebrewItems![0].System)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.HomebrewItems![0].Author)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.HomebrewItems![0].ReleaseDate)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.HomebrewItems!) {
+        <tr>
+            <td>
+                <a href="@item.Link">@item.Title</a>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Type)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Source)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.System)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Author)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ReleaseDate)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
