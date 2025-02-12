@@ -66,9 +66,9 @@ namespace Super_Simple_Homebrew_Hoster
                 if (await userManager.FindByEmailAsync(adminEmail) == null)
                 {
                     // Creates a new user with appropriate permissions for an admin
-                    // TODO: Add DisplayName
                     var user = new HomebrewUser
                     {
+                        DisplayName = "Admin",
                         CanMakeBrews = true,
                         CanDeleteBrews = true,
                         UserName = adminEmail,

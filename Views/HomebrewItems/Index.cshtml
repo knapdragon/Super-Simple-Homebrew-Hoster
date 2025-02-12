@@ -91,16 +91,14 @@
             <td>
                 @Html.DisplayFor(modelItem => item.ReleaseDate)
             </td>
-            @if (!User.IsInRole("Guest")) {
+            @if (User.Identity.IsAuthenticated) {
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                     <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
                     <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
                 </td>
             } else {
-                <!-- Hide edit/delete buttons if user is a guest
-                    TODO: fix this, doesn't work yet
-                -->
+                <!-- Hide edit/delete buttons if user is unregistered -->
                 <td>
                     <a asp-action="Details" asp-route-id="@item.Id">Details</a>
                 </td>

@@ -13,10 +13,11 @@
             <hr />
             <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
             <div class="form-floating mb-3 py-1">
-                <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
+                <input asp-for="Input.Email" class="form-control" autocomplete="email" aria-required="true" placeholder="name@example.com" />
                 <label asp-for="Input.Email">Email</label>
                 <span asp-validation-for="Input.Email" class="text-danger"></span>
             </div>
+            <!-- TODO: make UsernameInput affect DisplayName property of HomebrewUser -->
             <div class="form-floating mb-3 py-1">
                 <input asp-for="Input.UsernameInput" class="form-control" autocomplete="username" aria-required="true" />
                 <label asp-for="Input.UsernameInput">Username</label>

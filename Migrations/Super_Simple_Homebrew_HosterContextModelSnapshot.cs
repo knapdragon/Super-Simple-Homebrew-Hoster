@@ -59,7 +59,7 @@ namespace Super_Simple_Homebrew_Hoster.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("HomebrewItem");
+                    b.ToTable("HomebrewItem", (string)null);
                 });
 #pragma warning restore 612, 618
         }
