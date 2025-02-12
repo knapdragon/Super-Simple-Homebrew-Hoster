@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -72,6 +74,7 @@ namespace Super_Simple_Homebrew_Hoster.Controllers
         }
 
         // GET: HomebrewItems/Create
+        [Authorize(Roles = "Admin,User")]
         public IActionResult Create()
         {
             return View();
@@ -82,6 +85,7 @@ namespace Super_Simple_Homebrew_Hoster.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin,User")]
         public async Task<IActionResult> Create([Bind("Id,Title,Type,Version,Source,System,Author,ReleaseDate,Link,Content")] HomebrewItem homebrewItem)
         {
             if (ModelState.IsValid)
@@ -94,6 +98,7 @@ namespace Super_Simple_Homebrew_Hoster.Controllers
         }
 
         // GET: HomebrewItems/Edit/5
+        [Authorize(Roles = "Admin,User")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -114,6 +119,7 @@ namespace Super_Simple_Homebrew_Hoster.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin,User")]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Type,Version,Source,System,Author,ReleaseDate,Link,Content")] HomebrewItem homebrewItem)
         {
             if (id != homebrewItem.Id)
@@ -145,6 +151,7 @@ namespace Super_Simple_Homebrew_Hoster.Controllers
         }
 
         // GET: HomebrewItems/Delete/5
+        [Authorize(Roles = "Admin,User")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -165,6 +172,7 @@ namespace Super_Simple_Homebrew_Hoster.Controllers
         // POST: HomebrewItems/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin,User")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var homebrewItem = await _context.HomebrewItem.FindAsync(id);

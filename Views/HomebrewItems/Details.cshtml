@@ -14,6 +14,7 @@
     <a asp-action="Index">Back to List</a>
 </div>
 
+<!-- Show column titles and data for the item; dt/dd classes are for presentation via bootstrap -->
 <div>
     <hr />
     <dl class="row">
@@ -85,7 +86,7 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 
-    <!-- Initialise TinyMCE WYSIWYG editor -->
+    <!-- Initialise TinyMCE WYSIWYG editor in readonly mode -->
     <script>
         tinymce.init({
             selector: 'textarea',

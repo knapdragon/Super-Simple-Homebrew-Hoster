@@ -1,4 +1,9 @@
-﻿@model Super_Simple_Homebrew_Hoster.Models.HomebrewItemSystemViewModel
+﻿@using Microsoft.AspNetCore.Identity
+@using Super_Simple_Homebrew_Hoster.Areas.Identity.Data;
+@inject SignInManager<HomebrewUser> SignInManager
+@inject UserManager<HomebrewUser> UserManager
+
+@model Super_Simple_Homebrew_Hoster.Models.HomebrewItemSystemViewModel
 
 @{
     ViewData["Title"] = "Index";
@@ -8,10 +13,15 @@
 
 <p>A list of TTRPG homebrew creations</p>
 
-<p>
-    <a asp-action="Create">+ Create New</a>
-</p>
+<!-- Users without accounts ("Guests") are not allowed to create, edit or delete items -->
+@if (!User.IsInRole("Guest"))
+{
+    <p>
+        <a asp-action="Create">+ Create New</a>
+    </p>
+}
 
+<!-- Dropdown for the tabletop system to search for -->
 <form asp-controller="HomebrewItems" asp-action="Index" method="get">
 	<p>
         System(s): 
@@ -27,6 +37,12 @@
     </p>
 </form>
 
+<!-- 
+    Main index table 
+    <thead>: The column titles
+    <tbody>: Each item's data according to the column, allowing for viewing of details, editing, or deletion
+    (Editing & deletion require the User or Admin role)
+-->
 <table class="table">
     <thead>
         <tr>
@@ -52,7 +68,8 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.HomebrewItems!) {
+    <!-- Iterate through HomebrewItems and list details -->
+    @foreach (var item in Model.HomebrewItems!) {
         <tr>
             <td>
                 <a href="@item.Link">@item.Title</a>
@@ -72,12 +89,19 @@
             <td>
                 @Html.DisplayFor(modelItem => item.ReleaseDate)
             </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
+            @if (!User.IsInRole("Guest")) {
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            } else {
+                <!-- Hide edit/delete buttons if user is a guest -->
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+                </td>
+            }
         </tr>
-}
+    }
     </tbody>
 </table>
