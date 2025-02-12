@@ -13,7 +13,9 @@
 
 <p>A list of TTRPG homebrew creations</p>
 
-<!-- Users without accounts ("Guests") are not allowed to create, edit or delete items -->
+<!-- Users without accounts ("Guests") are not allowed to create, edit or delete items 
+    TODO: fix this, doesn't work yet
+-->
 @if (!User.IsInRole("Guest"))
 {
     <p>
@@ -96,7 +98,9 @@
                     <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
                 </td>
             } else {
-                <!-- Hide edit/delete buttons if user is a guest -->
+                <!-- Hide edit/delete buttons if user is a guest
+                    TODO: fix this, doesn't work yet
+                -->
                 <td>
                     <a asp-action="Details" asp-route-id="@item.Id">Details</a>
                 </td>

@@ -1,4 +1,9 @@
-﻿@model Super_Simple_Homebrew_Hoster.Models.HomebrewItem
+﻿@using Microsoft.AspNetCore.Identity
+@using Super_Simple_Homebrew_Hoster.Areas.Identity.Data;
+@inject SignInManager<HomebrewUser> SignInManager
+@inject UserManager<HomebrewUser> UserManager
+
+@model Super_Simple_Homebrew_Hoster.Models.HomebrewItem
 
 @{
     ViewData["Title"] = "Delete";
