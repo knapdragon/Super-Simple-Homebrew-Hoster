@@ -29,6 +29,7 @@ namespace Super_Simple_Homebrew_Hoster.Areas.Identity.Pages.Account
         private readonly IUserStore<HomebrewUser> _userStore;
         private readonly IUserEmailStore<HomebrewUser> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
+        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IEmailSender _emailSender;
 
         public RegisterModel(
@@ -36,6 +37,7 @@ namespace Super_Simple_Homebrew_Hoster.Areas.Identity.Pages.Account
             IUserStore<HomebrewUser> userStore,
             SignInManager<HomebrewUser> signInManager,
             ILogger<RegisterModel> logger,
+            RoleManager<IdentityRole> roleManager,
             IEmailSender emailSender)
         {
             _userManager = userManager;
@@ -43,6 +45,7 @@ namespace Super_Simple_Homebrew_Hoster.Areas.Identity.Pages.Account
             _emailStore = GetEmailStore();
             _signInManager = signInManager;
             _logger = logger;
+            _roleManager = roleManager;
             _emailSender = emailSender;
         }
 
@@ -131,6 +134,12 @@ namespace Super_Simple_Homebrew_Hoster.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
+
+                    // role code credit: Zhi Lv (https://learn.microsoft.com/en-us/answers/questions/623030/assign-user-to-role-during-registration)
+                    var defaultRole = _roleManager.FindByNameAsync("User").Result;
+                    if (defaultRole != null) {
+                        await _userManager.AddToRoleAsync(user, defaultRole.Name);
+                    }
 
                     var userId = await _userManager.GetUserIdAsync(user);
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
