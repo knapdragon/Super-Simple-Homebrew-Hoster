@@ -127,7 +127,7 @@ namespace Super_Simple_Homebrew_Hoster.Areas.Identity.Pages.Account
             {
                 var user = CreateUser();
 
-                await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
+                await _userStore.SetUserNameAsync(user, Input.UsernameInput, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
@@ -135,10 +135,12 @@ namespace Super_Simple_Homebrew_Hoster.Areas.Identity.Pages.Account
                 {
                     _logger.LogInformation("User created a new account with password.");
 
+                    user.BrewsCreated = new List<int>();    // Initialise BrewsCreated to empty list rather than null
+
                     // role code credit: Zhi Lv (https://learn.microsoft.com/en-us/answers/questions/623030/assign-user-to-role-during-registration)
-                    var defaultRole = _roleManager.FindByNameAsync("User").Result;
+                    IdentityRole defaultRole = _roleManager.FindByNameAsync("User").Result;  // Set default role of new users to 'User' role
                     if (defaultRole != null) {
-                        await _userManager.AddToRoleAsync(user, defaultRole.Name);
+                        await _userManager.AddToRoleAsync(user, defaultRole.Name);  // Add new user to default role
                     }
 
                     var userId = await _userManager.GetUserIdAsync(user);

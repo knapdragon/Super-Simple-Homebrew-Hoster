@@ -45,7 +45,7 @@ namespace Super_Simple_Homebrew_Hoster.Models
         public string? System { get; set; }
 
         /// <value>
-        /// <c>Author</c>: the user's self-described name.
+        /// <c>Author</c>: the user's DisplayName as supplied upon registration.
         /// </value>
         public string? Author { get; set; } 
 

@@ -97,11 +97,12 @@ namespace Super_Simple_Homebrew_Hoster.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(homebrewItem); // Adds 'homebrewItem' object to the Super_Simple_Homebrew_Hoster context.
-                await _context.SaveChangesAsync();  // Saves the above changes to the database
-
                 HomebrewUser currentUser = _userManager.FindByNameAsync(homebrewItem.Author).Result; // Get the current user by DisplayName
                 if (currentUser != null) {
+                    homebrewItem.Author = currentUser.DisplayName; // Set the Author field to the user's DisplayName
+                    _context.Add(homebrewItem); // Adds 'homebrewItem' object to the Super_Simple_Homebrew_Hoster context.                
+                    await _context.SaveChangesAsync();  // Saves the above changes to the database
+
                     currentUser.BrewsCreated.Add(homebrewItem.Id); // Add Id of the homebrewItem to the user's BrewsCreated
                     _accountsContext.Update(currentUser); // Update the UserAccountsContext AspNetUsers table with the modified data
                     await _accountsContext.SaveChangesAsync(); // Save the changes to the table

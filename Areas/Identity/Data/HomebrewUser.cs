@@ -14,21 +14,22 @@ namespace Super_Simple_Homebrew_Hoster.Areas.Identity.Data;
 public class HomebrewUser : IdentityUser
 {
     /// <summary>
-    /// <c>DisplayName</c> is the user's desired name; the Author field of HomebrewItem should be set to this
+    /// <c>DisplayName</c> is the user's desired name as defined upon registration; the Author field of HomebrewItem should be set to this
     /// This property is also referenced as 'UsernameInput' in UserAccountsContext.cs
     /// </summary>
-    public string? DisplayName { get; set; }
+    [Required]
+    public string DisplayName { get; set; }
     /// <summary>
-    /// <c>CanMakeBrews</c>: a property referring to whether or not the user can create new HomebrewItems
+    /// <c>CanMakeBrews</c>: whether or not the user can create new HomebrewItems
     /// </summary>
     public bool CanMakeBrews { get; set; }
     /// <summary>
-    /// <c>CanDeleteBrews</c>: a property referring to whether or not the user can delete HomebrewItems that they have not created (i.e. are not in BrewsCreated)
+    /// <c>CanDeleteBrews</c>: whether or not the user can delete HomebrewItems that they have not created (i.e. are not in BrewsCreated)
     /// </summary>
     public bool CanDeleteBrews { get; set; }
     /// <summary>
-    /// <c>BrewsCreated</c> is a list of integer IDs which reference specific HomebrewItems
+    /// <c>BrewsCreated</c> is a list of integer IDs which reference specific HomebrewItems. Initialised as empty upon user registration.
     /// </summary>
-    public List<int>? BrewsCreated { get; set; }
+    public List<int> BrewsCreated { get; set; }
 }
 
