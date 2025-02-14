@@ -9,16 +9,22 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Super_Simple_Homebrew_Hoster.Data;
 using Super_Simple_Homebrew_Hoster.Models;
+using Super_Simple_Homebrew_Hoster.Areas.Identity.Data;
+using Microsoft.AspNet.Identity;
 
 namespace Super_Simple_Homebrew_Hoster.Controllers
 {
     public class HomebrewItemsController : Controller
     {
         private readonly Super_Simple_Homebrew_HosterContext _context;
+        private readonly UserAccountsContext _accountsContext;
+        private readonly Microsoft.AspNetCore.Identity.UserManager<HomebrewUser> _userManager;
 
-        public HomebrewItemsController(Super_Simple_Homebrew_HosterContext context)
+        public HomebrewItemsController(Super_Simple_Homebrew_HosterContext context, UserAccountsContext accountsContext, Microsoft.AspNetCore.Identity.UserManager<HomebrewUser> userManager)
         {
             _context = context;
+            _accountsContext = accountsContext;
+            _userManager = userManager;
         }
 
         // GET: HomebrewItems
@@ -81,6 +87,7 @@ namespace Super_Simple_Homebrew_Hoster.Controllers
         }
 
         // POST: HomebrewItems/Create
+        // Creates a new HomebrewItem with the user-supplied attributes.
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -90,9 +97,20 @@ namespace Super_Simple_Homebrew_Hoster.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(homebrewItem);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                _context.Add(homebrewItem); // Adds 'homebrewItem' object to the Super_Simple_Homebrew_Hoster context.
+                await _context.SaveChangesAsync();  // Saves the above changes to the database
+
+                HomebrewUser currentUser = _userManager.FindByNameAsync(homebrewItem.Author).Result; // Get the current user by DisplayName
+                if (currentUser != null) {
+                    currentUser.BrewsCreated.Add(homebrewItem.Id); // Add Id of the homebrewItem to the user's BrewsCreated
+                    _accountsContext.Update(currentUser); // Update the UserAccountsContext AspNetUsers table with the modified data
+                    await _accountsContext.SaveChangesAsync(); // Save the changes to the table
+                } else
+                {
+                    throw new Exception("No such user exists.");
+                }
+                
+                return RedirectToAction(nameof(Index)); // Redirect user back to the index page, where their changes should now be visible
             }
             return View(homebrewItem);
         }

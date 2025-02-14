@@ -8,7 +8,6 @@ using Super_Simple_Homebrew_Hoster.Models;
 
 namespace Super_Simple_Homebrew_Hoster.Areas.Identity.Data;
 
-// TODO: Add DisplayName property for username customisation
 /// <summary>
 /// A registered user of the application
 /// </summary>

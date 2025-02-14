@@ -13,11 +13,8 @@
 
 <p>A list of TTRPG homebrew creations</p>
 
-<!-- Users without accounts ("Guests") are not allowed to create, edit or delete items 
-    TODO: fix this, doesn't work yet
--->
-@if (!User.IsInRole("Guest"))
-{
+<!-- Users without accounts are not allowed to create, edit or delete items -->
+@if (User.Identity.IsAuthenticated) {
     <p>
         <a asp-action="Create">+ Create New</a>
     </p>
@@ -45,7 +42,7 @@
     <tbody>: Each item's data according to the column, allowing for viewing of details, editing, or deletion
     (Editing & deletion require the User or Admin role)
 -->
-<table class="table">
+<table class="table table-hover">
     <thead>
         <tr>
             <th>
@@ -69,7 +66,7 @@
             <th></th>
         </tr>
     </thead>
-    <tbody>
+    <tbody class="table-striped table-striped-columns">
     <!-- Iterate through HomebrewItems and list details -->
     @foreach (var item in Model.HomebrewItems!) {
         <tr>
