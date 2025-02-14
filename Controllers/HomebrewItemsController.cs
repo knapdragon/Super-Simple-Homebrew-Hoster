@@ -10,7 +10,6 @@ using Microsoft.EntityFrameworkCore;
 using Super_Simple_Homebrew_Hoster.Data;
 using Super_Simple_Homebrew_Hoster.Models;
 using Super_Simple_Homebrew_Hoster.Areas.Identity.Data;
-using Microsoft.AspNet.Identity;
 
 namespace Super_Simple_Homebrew_Hoster.Controllers
 {
@@ -97,9 +96,9 @@ namespace Super_Simple_Homebrew_Hoster.Controllers
         {
             if (ModelState.IsValid)
             {
-                HomebrewUser currentUser = _userManager.FindByNameAsync(homebrewItem.Author).Result; // Get the current user by DisplayName
+                HomebrewUser currentUser = _userManager.FindByNameAsync(homebrewItem.Author).Result; // Get the current user by UserName
                 if (currentUser != null) {
-                    homebrewItem.Author = currentUser.DisplayName; // Set the Author field to the user's DisplayName
+                    homebrewItem.Author = currentUser.UserName; // Set the Author field to the user's UserName
                     _context.Add(homebrewItem); // Adds 'homebrewItem' object to the Super_Simple_Homebrew_Hoster context.                
                     await _context.SaveChangesAsync();  // Saves the above changes to the database
 

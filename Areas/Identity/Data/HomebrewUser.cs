@@ -15,10 +15,9 @@ public class HomebrewUser : IdentityUser
 {
     /// <summary>
     /// <c>DisplayName</c> is the user's desired name as defined upon registration; the Author field of HomebrewItem should be set to this
-    /// This property is also referenced as 'UsernameInput' in UserAccountsContext.cs
+    /// This property is also referenced as 'DisplayNameInput' in UserAccountsContext.cs
     /// </summary>
-    [Required]
-    public string DisplayName { get; set; }
+    public string? DisplayName { get; set; }
     /// <summary>
     /// <c>CanMakeBrews</c>: whether or not the user can create new HomebrewItems
     /// </summary>
@@ -30,6 +29,6 @@ public class HomebrewUser : IdentityUser
     /// <summary>
     /// <c>BrewsCreated</c> is a list of integer IDs which reference specific HomebrewItems. Initialised as empty upon user registration.
     /// </summary>
-    public List<int> BrewsCreated { get; set; }
+    public List<int>? BrewsCreated { get; set; }
 }
 

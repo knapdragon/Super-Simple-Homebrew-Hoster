@@ -5,6 +5,7 @@ using Super_Simple_Homebrew_Hoster.Data;
 using Super_Simple_Homebrew_Hoster.Models;
 using Microsoft.AspNetCore.Identity;
 using Super_Simple_Homebrew_Hoster.Areas.Identity.Data;
+using System.Data.SqlTypes;
 
 namespace Super_Simple_Homebrew_Hoster
 { 
@@ -60,18 +61,15 @@ namespace Super_Simple_Homebrew_Hoster
                 var userManager = services.GetRequiredService<UserManager<HomebrewUser>>(); // Get userManager service with custom HomebrewUser type, for improved customisation
 
                 string adminEmail = "admin@admin.com";  // placeholder; going to want improved security, of course
-                string adminPassword = "Test1234,";     // placeholder; going to want improved security, of course
+                string adminPassword = "Test1234,";     // placeholder
 
                 // If the admin user's email doesn't exist
-                if (await userManager.FindByEmailAsync(adminEmail) == null)
-                {
+                if (await userManager.FindByEmailAsync(adminEmail) == null) {
                     // Creates a new user with appropriate permissions for an admin
-                    var user = new HomebrewUser
-                    {
-                        DisplayName = "Admin",
+                    var user = new HomebrewUser{
                         CanMakeBrews = true,
                         CanDeleteBrews = true,
-                        UserName = adminEmail,
+                        UserName = "Admin",
                         Email = adminEmail,
                         EmailConfirmed = true   // bypass email confirmation requirement for testing purposes
                     };
