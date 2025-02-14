@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Infrastructure;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -17,9 +18,9 @@ namespace Super_Simple_Homebrew_Hoster.Controllers
     {
         private readonly Super_Simple_Homebrew_HosterContext _context;
         private readonly UserAccountsContext _accountsContext;
-        private readonly Microsoft.AspNetCore.Identity.UserManager<HomebrewUser> _userManager;
+        private readonly UserManager<HomebrewUser> _userManager;
 
-        public HomebrewItemsController(Super_Simple_Homebrew_HosterContext context, UserAccountsContext accountsContext, Microsoft.AspNetCore.Identity.UserManager<HomebrewUser> userManager)
+        public HomebrewItemsController(Super_Simple_Homebrew_HosterContext context, UserAccountsContext accountsContext, UserManager<HomebrewUser> userManager)
         {
             _context = context;
             _accountsContext = accountsContext;
@@ -96,18 +97,21 @@ namespace Super_Simple_Homebrew_Hoster.Controllers
         {
             if (ModelState.IsValid)
             {
-                HomebrewUser currentUser = _userManager.FindByNameAsync(homebrewItem.Author).Result; // Get the current user by UserName
+                HomebrewUser? currentUser = _userManager.GetUserAsync(User).Result; // Get the current user
                 if (currentUser != null) {
-                    homebrewItem.Author = currentUser.UserName; // Set the Author field to the user's UserName
+                    homebrewItem.Author = currentUser.DisplayName; // Set the Author field to the user's UserName
                     _context.Add(homebrewItem); // Adds 'homebrewItem' object to the Super_Simple_Homebrew_Hoster context.                
                     await _context.SaveChangesAsync();  // Saves the above changes to the database
 
-                    currentUser.BrewsCreated.Add(homebrewItem.Id); // Add Id of the homebrewItem to the user's BrewsCreated
-                    _accountsContext.Update(currentUser); // Update the UserAccountsContext AspNetUsers table with the modified data
-                    await _accountsContext.SaveChangesAsync(); // Save the changes to the table
-                } else
-                {
-                    throw new Exception("No such user exists.");
+                    try {
+                        currentUser.BrewsCreated?.Add(homebrewItem.Id); // Add Id of the homebrewItem to the user's BrewsCreated
+                        _accountsContext.Update(currentUser); // Update the UserAccountsContext AspNetUsers table with the modified data
+                        await _accountsContext.SaveChangesAsync(); // Save the changes to the table
+                    } catch (DbUpdateConcurrencyException) {
+                        throw new DbUpdateConcurrencyException("Error: more changes made to database than expected.");
+                    }
+                } else {
+                    throw new Exception("Error creating item: Current user is null and does not exist.");
                 }
                 
                 return RedirectToAction(nameof(Index)); // Redirect user back to the index page, where their changes should now be visible
