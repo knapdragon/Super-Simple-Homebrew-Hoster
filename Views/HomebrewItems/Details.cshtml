@@ -11,7 +11,7 @@
 
 <div>
     @if (User.Identity.IsAuthenticated) {
-        <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> <p>|</p>
+       <p><a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |</p>
     }
     <a asp-action="Index">Back to List</a>
 </div>

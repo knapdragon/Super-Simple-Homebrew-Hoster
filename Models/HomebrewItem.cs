@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Buffers.Text;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Net;
@@ -7,6 +8,7 @@ using System.Text.Encodings.Web;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Xml;
+using Microsoft.AspNet.Identity;
 using Microsoft.AspNetCore.Html;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 

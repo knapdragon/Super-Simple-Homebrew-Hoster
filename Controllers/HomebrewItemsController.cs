@@ -32,7 +32,7 @@ namespace Super_Simple_Homebrew_Hoster.Controllers
         {
             if (_context.HomebrewItem == null)
             {
-                return Problem("Entity set 'Super_Simple_Homebrew_Hoster.HomebrewItem'  is null.");
+                return Problem("Entity set 'Super_Simple_Homebrew_Hoster.HomebrewItem' is null.");
             }
 
             // Use LINQ to get a list of available systems.
@@ -97,9 +97,9 @@ namespace Super_Simple_Homebrew_Hoster.Controllers
         {
             if (ModelState.IsValid)
             {
-                HomebrewUser? currentUser = _userManager.GetUserAsync(User).Result; // Get the current user
+                HomebrewUser? currentUser = _userManager.GetUserAsync(User).Result; // Get the currently logged-in user
                 if (currentUser != null) {
-                    homebrewItem.Author = currentUser.DisplayName; // Set the Author field to the user's UserName
+                    homebrewItem.Author = currentUser.DisplayName;
                     _context.Add(homebrewItem); // Adds 'homebrewItem' object to the Super_Simple_Homebrew_Hoster context.                
                     await _context.SaveChangesAsync();  // Saves the above changes to the database
 
@@ -200,13 +200,21 @@ namespace Super_Simple_Homebrew_Hoster.Controllers
             var homebrewItem = await _context.HomebrewItem.FindAsync(id);
             if (homebrewItem != null)
             {
-                HomebrewUser? currentUser = _userManager.GetUserAsync(User).Result; // Get the current user
-                if (currentUser != null) {
+                HomebrewUser userToRemoveBrewFrom;
+                // If an admin, find the user according to item author; otherwise get currently logged-in user
+                if (User.IsInRole("Admin")) {
+                    userToRemoveBrewFrom = _userManager.GetUserAsync(User).Result; // WIP - this  is obviously incorrect
+                }
+                else {
+                    userToRemoveBrewFrom = _userManager.GetUserAsync(User).Result;
+                }
+
+                if (userToRemoveBrewFrom != null) {
                     _context.HomebrewItem.Remove(homebrewItem);
 
                     try {
-                        currentUser.BrewsCreated?.Remove(homebrewItem.Id); // Remove Id of the homebrewItem from the user's BrewsCreated
-                        _accountsContext.Update(currentUser); // Update the UserAccountsContext AspNetUsers table with the modified data
+                        userToRemoveBrewFrom.BrewsCreated?.Remove(homebrewItem.Id); // Remove Id of the homebrewItem from the user's BrewsCreated
+                        _accountsContext.Update(userToRemoveBrewFrom); // Update the UserAccountsContext AspNetUsers table with the modified data
                         await _accountsContext.SaveChangesAsync(); // Save changes
                     } catch (DbUpdateConcurrencyException) {
                         throw new DbUpdateConcurrencyException("Error: more changes made to database than expected.");

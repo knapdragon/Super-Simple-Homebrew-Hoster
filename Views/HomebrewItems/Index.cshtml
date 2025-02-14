@@ -7,6 +7,8 @@
 
 @{
     ViewData["Title"] = "Index";
+
+    HomebrewUser? currentUser = UserManager.GetUserAsync(User).Result; // Get the current user
 }
 
 <h1>Homebrew Index</h1>
@@ -67,7 +69,7 @@
         </tr>
     </thead>
     <tbody class="table-striped table-striped-columns">
-    <!-- Iterate through HomebrewItems and list details -->
+    <!-- List the details of the item's properties -->
     @foreach (var item in Model.HomebrewItems!) {
         <tr>
             <td>
@@ -88,7 +90,8 @@
             <td>
                 @Html.DisplayFor(modelItem => item.ReleaseDate)
             </td>
-            @if (User.Identity.IsAuthenticated) {
+            <!-- Allow editing and deletion if the user is an admin OR is logged in and the item's creator -->
+            @if ((User.Identity.IsAuthenticated && currentUser.BrewsCreated.Contains(item.Id)) || User.IsInRole ("Admin")) {
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                     <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
