@@ -202,24 +202,31 @@ namespace Super_Simple_Homebrew_Hoster.Controllers
             {
                 HomebrewUser userToRemoveBrewFrom;
                 // If an admin, find the user according to item author; otherwise get currently logged-in user
-                if (User.IsInRole("Admin")) {
-                    userToRemoveBrewFrom = _userManager.GetUserAsync(User).Result; // WIP - this  is obviously incorrect
-                }
-                else {
+                if (User.IsInRole("Admin")) 
+                {
+                    userToRemoveBrewFrom = _userManager.FindByNameAsync(homebrewItem.Author).Result;
+                } 
+                else 
+                {
                     userToRemoveBrewFrom = _userManager.GetUserAsync(User).Result;
                 }
 
                 if (userToRemoveBrewFrom != null) {
                     _context.HomebrewItem.Remove(homebrewItem);
 
-                    try {
+                    try 
+                    {
                         userToRemoveBrewFrom.BrewsCreated?.Remove(homebrewItem.Id); // Remove Id of the homebrewItem from the user's BrewsCreated
                         _accountsContext.Update(userToRemoveBrewFrom); // Update the UserAccountsContext AspNetUsers table with the modified data
                         await _accountsContext.SaveChangesAsync(); // Save changes
-                    } catch (DbUpdateConcurrencyException) {
+                    } 
+                    catch (DbUpdateConcurrencyException) 
+                    {
                         throw new DbUpdateConcurrencyException("Error: more changes made to database than expected.");
                     }
-                } else {
+                } 
+                else 
+                {
                     throw new Exception("Error creating item: Current user is null and does not exist.");
                 }
             }

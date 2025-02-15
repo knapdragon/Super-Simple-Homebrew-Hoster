@@ -40,6 +40,9 @@
                 <span asp-validation-for="System" class="text-danger"></span>
             </div>
             <div class="form-group">
+                @Html.HiddenFor(item => item.Author) <!-- Prevents author field from being set to NULL when edited -->
+            </div>
+            <div class="form-group">
                 <label asp-for="ReleaseDate" class="control-label"></label>
                 <input asp-for="ReleaseDate" class="form-control" />
 				<span asp-validation-for="ReleaseDate" class="text-danger"></span>
