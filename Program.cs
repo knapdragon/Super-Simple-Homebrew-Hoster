@@ -29,6 +29,9 @@ namespace Super_Simple_Homebrew_Hoster
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<UserAccountsContext>();
 
+            // Credit to Steve Gordon (2016) for a guide to overriding --- https://www.stevejgordon.co.uk/extending-the-asp-net-core-identity-signinmanager
+            builder.Services.AddScoped<SignInManager<HomebrewUser>, HomebrewSignInManager<HomebrewUser>>();
+
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
@@ -69,6 +72,7 @@ namespace Super_Simple_Homebrew_Hoster
                     var user = new HomebrewUser{
                         CanMakeBrews = true,
                         CanDeleteBrews = true,
+                        BrewsCreated = [],
                         UserName = "Admin",
                         Email = adminEmail,
                         EmailConfirmed = true   // bypass email confirmation requirement for testing purposes

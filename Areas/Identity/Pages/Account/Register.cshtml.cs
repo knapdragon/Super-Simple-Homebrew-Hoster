@@ -90,7 +90,7 @@ namespace Super_Simple_Homebrew_Hoster.Areas.Identity.Pages.Account
             [Required]
             [StringLength(100, ErrorMessage = "Maximum of 100 characters allowed.")]
             [Display(Name = "Username")]
-            public string DisplayNameInput { get; set; }
+            public string Username { get; set; }
 
             /// <summary>
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
@@ -127,9 +127,8 @@ namespace Super_Simple_Homebrew_Hoster.Areas.Identity.Pages.Account
             {
                 var user = CreateUser();
 
-                await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
+                await _userStore.SetUserNameAsync(user, Input.Username, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
-                user.DisplayName = Input.DisplayNameInput; // add DisplayName
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
                 if (result.Succeeded)

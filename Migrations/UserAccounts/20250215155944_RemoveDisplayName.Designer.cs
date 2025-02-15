@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Super_Simple_Homebrew_Hoster.Areas.Identity.Data;
 
@@ -11,9 +12,11 @@ using Super_Simple_Homebrew_Hoster.Areas.Identity.Data;
 namespace Super_Simple_Homebrew_Hoster.Migrations.UserAccounts
 {
     [DbContext(typeof(UserAccountsContext))]
-    partial class UserAccountsContextModelSnapshot : ModelSnapshot
+    [Migration("20250215155944_RemoveDisplayName")]
+    partial class RemoveDisplayName
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

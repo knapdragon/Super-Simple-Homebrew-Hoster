@@ -99,7 +99,7 @@ namespace Super_Simple_Homebrew_Hoster.Controllers
             {
                 HomebrewUser? currentUser = _userManager.GetUserAsync(User).Result; // Get the currently logged-in user
                 if (currentUser != null) {
-                    homebrewItem.Author = currentUser.DisplayName;
+                    homebrewItem.Author = currentUser.UserName;
                     _context.Add(homebrewItem); // Adds 'homebrewItem' object to the Super_Simple_Homebrew_Hoster context.                
                     await _context.SaveChangesAsync();  // Saves the above changes to the database
 
