@@ -109,16 +109,13 @@ namespace Super_Simple_Homebrew_Hoster.Controllers
                 if (currentUser != null) {
                     homebrewItem.Author = currentUser.UserName;
                     _context.Add(homebrewItem); // Adds 'homebrewItem' object to the Super_Simple_Homebrew_Hoster context.                
-                    await _context.SaveChangesAsync();  // Saves the above changes to the database
+                    _context.SaveChanges();  // Saves the above changes to the database
 
-                    try {
-                        currentUser.BrewsCreated?.Add(homebrewItem.Id); // Add Id of the homebrewItem to the user's BrewsCreated
-                        _accountsContext.Update(currentUser); // Update the UserAccountsContext AspNetUsers table with the modified data
-                        await _accountsContext.SaveChangesAsync(); // Save the changes to the table
-                    } catch (DbUpdateConcurrencyException) {
-                        throw new DbUpdateConcurrencyException("Error: more changes made to database than expected.");
-                    }
-                } else {
+                    currentUser.BrewsCreated?.Add(homebrewItem.Id); // Add Id of the homebrewItem to the user's BrewsCreated
+                    _accountsContext.Update(currentUser); // Update the UserAccountsContext AspNetUsers table with the modified data
+                    await _accountsContext.SaveChangesAsync(); // Save the changes to the table
+                }
+                else {
                     throw new Exception("Error creating item: Current user is null and does not exist.");
                 }
                 
