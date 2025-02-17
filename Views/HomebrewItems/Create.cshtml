@@ -7,7 +7,9 @@
 <h4>Add to the Homebrew Index</h4>
 <h6>You can either add something with a link to an existing page elsewhere, or make your own here!</h6>
 
+<a asp-action="Index">Back to Index</a>
 <hr />
+
 <form asp-action="Create">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <div class="container mx-0 w-50">
@@ -76,10 +78,6 @@
         <input type="submit" value="Create" class="btn btn-primary" />
     </div>
 </form>
-
-<div>
-    <a asp-action="Index">Back to Index</a>
-</div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

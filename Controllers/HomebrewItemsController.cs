@@ -101,7 +101,7 @@ namespace Super_Simple_Homebrew_Hoster.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin,User")]
-        public async Task<IActionResult> Create([Bind("Id,Title,Type,Version,Source,System,Author,ReleaseDate,Link,Content")] HomebrewItem homebrewItem)
+        public async Task<IActionResult> Create([Bind("Title,Type,Version,Source,System,ReleaseDate,Link,Content")] HomebrewItem homebrewItem)
         {
             if (ModelState.IsValid)
             {
@@ -141,6 +141,16 @@ namespace Super_Simple_Homebrew_Hoster.Controllers
             {
                 return NotFound();
             }
+
+            // Don't allow incorrect users to access the edit page of an item they haven't made
+            var currentUser = _userManager.GetUserAsync(User).Result;
+            if (currentUser != null)
+            {
+                if (currentUser.UserName != homebrewItem.Author && !currentUser.BrewsCreated.Contains(homebrewItem.Id))
+                {
+                    return Forbid();
+                }
+            }
             return View(homebrewItem);
         }
 
@@ -150,7 +160,7 @@ namespace Super_Simple_Homebrew_Hoster.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin,User")]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Type,Version,Source,System,Author,ReleaseDate,Link,Content")] HomebrewItem homebrewItem)
+        public async Task<IActionResult> Edit(int id, [Bind("Title,Type,Version,Source,System,ReleaseDate,Link,Content")] HomebrewItem homebrewItem)
         {
             if (id != homebrewItem.Id)
             {
@@ -159,23 +169,35 @@ namespace Super_Simple_Homebrew_Hoster.Controllers
 
             if (ModelState.IsValid)
             {
-                try
+                // Don't allow incorrect users to edit an item they haven't made
+                var currentUser = _userManager.GetUserAsync(User).Result;
+                if (currentUser != null)
                 {
-                    _context.Update(homebrewItem);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!HomebrewItemExists(homebrewItem.Id))
+                    if (currentUser.UserName != homebrewItem.Author && !currentUser.BrewsCreated.Contains(homebrewItem.Id))
                     {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
+                        return Forbid();
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                else
+                {
+                    try
+                    {
+                        _context.Update(homebrewItem);
+                        await _context.SaveChangesAsync();
+                    }
+                    catch (DbUpdateConcurrencyException)
+                    {
+                        if (!HomebrewItemExists(homebrewItem.Id))
+                        {
+                            return NotFound();
+                        }
+                        else
+                        {
+                            throw;
+                        }
+                    }
+                    return RedirectToAction(nameof(Index));
+                }
             }
             return View(homebrewItem);
         }
@@ -194,6 +216,16 @@ namespace Super_Simple_Homebrew_Hoster.Controllers
             if (homebrewItem == null)
             {
                 return NotFound();
+            }
+
+            // Don't allow incorrect users to access the delete page of an item they haven't made
+            var currentUser = _userManager.GetUserAsync(User).Result;
+            if (currentUser != null)
+            {
+                if (currentUser.UserName != homebrewItem.Author && !currentUser.BrewsCreated.Contains(homebrewItem.Id))
+                {
+                    return Forbid();
+                }
             }
 
             return View(homebrewItem);
@@ -220,6 +252,11 @@ namespace Super_Simple_Homebrew_Hoster.Controllers
                 }
 
                 if (userToRemoveBrewFrom != null) {
+                    // Don't allow incorrect users to delete an item they haven't made
+                    if (userToRemoveBrewFrom.UserName != homebrewItem.Author && !userToRemoveBrewFrom.BrewsCreated.Contains(homebrewItem.Id))
+                    {
+                        return Forbid();
+                    }
                     _context.HomebrewItem.Remove(homebrewItem);
 
                     try 
