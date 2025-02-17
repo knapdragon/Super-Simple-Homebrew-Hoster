@@ -1,81 +1,94 @@
 ﻿@model Super_Simple_Homebrew_Hoster.Models.HomebrewItem
 
+@using Microsoft.AspNetCore.Identity
+@using Super_Simple_Homebrew_Hoster.Areas.Identity.Data;
+@inject SignInManager<HomebrewUser> SignInManager
+@inject UserManager<HomebrewUser> UserManager
+
 @{
     ViewData["Title"] = "Edit";
 }
 
 <h1>Edit</h1>
 
-<h4>HomebrewItem</h4>
-<hr />
-<!-- List of text fields allowing submission and therefore transformation of existing data to the new inputs -->
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="Title" class="control-label"></label>
-                <input asp-for="Title" class="form-control" />
-                <span asp-validation-for="Title" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Type" class="control-label"></label>
-                <input asp-for="Type" class="form-control" />
-                <span asp-validation-for="Type" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Version" class="control-label"></label>
-                <input asp-for="Version" class="form-control" />
-                <span asp-validation-for="Version" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Source" class="control-label"></label>
-                <input asp-for="Source" class="form-control" />
-                <span asp-validation-for="Source" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="System" class="control-label"></label>
-                <input asp-for="System" class="form-control" />
-                <span asp-validation-for="System" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                @Html.HiddenFor(item => item.Author) <!-- Prevents author field from being set to NULL when edited -->
-            </div>
-            <div class="form-group">
-                <label asp-for="ReleaseDate" class="control-label"></label>
-                <input asp-for="ReleaseDate" class="form-control" />
-				<span asp-validation-for="ReleaseDate" class="text-danger"></span>
-			</div>
-            <div class="form-group">
-                <label asp-for="Link" class="control-label"></label>
-                <input asp-for="Link" class="form-control" />
-                <span asp-validation-for="Link" class="text-danger"></span>
-            </div>
-            <!-- 'Content' default input
-            <div class="form-group py-1">
-                <label asp-for="Content" class="control-label"></label>
-                <input asp-for="Content" class="form-control" />
-                <span asp-validation-for="Content" class="text-danger"></span>
-            </div>
-            -->
-            <!-- TinyMCE integrated WYSIWYG editor for Content field -->
-            <div class="form-group mb-3" style="min-width: 70vw !important">
-                <label asp-for="Content" class="p-0"></label>
-                <textarea asp-for="Content" class="form-control text-muted"></textarea>
-                <span asp-validation-for="Content" class="text-danger"></span>
-            </div>
-            
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
+<div class="d-flex flex-row">
+    <p><a class="me-1" asp-action="Index">Back to Index</a></p>
+    @if (UserManager.GetUserAsync(User).Result?.UserName == Model?.Author || User.IsInRole("Admin"))
+    {
+        <p class="me-1">| <a asp-action="Delete" asp-route-id="@Model?.Id" class="link-danger">Delete</a></p>
+    }
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+<hr />
+<!-- List of text fields allowing submission and therefore transformation of existing data to the new inputs -->
+<form asp-action="Edit">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="container mx-0 w-50">
+        <input type="hidden" asp-for="Id" />
+        <div class="input-group row py-1 border-bottom">
+            <div class="input-group">
+                <label asp-for="Title" class="input-group-text control-label col-3"></label>
+                <input asp-for="Title" class="form-control rounded-end-2 col-9" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="input-group row py-1 border-bottom">
+            <div class="input-group">
+                <label asp-for="Type" class="input-group-text control-label col-3"></label>
+                <input asp-for="Type" class="form-control rounded-end-2 col-9" />
+                <span asp-validation-for="Type" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="input-group row py-1 border-bottom">
+            <div class="input-group">
+                <label asp-for="Version" class="input-group-text control-label col-3"></label>
+                <input asp-for="Version" class="form-control rounded-end-2 col-9" />
+                <span asp-validation-for="Version" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="input-group row py-1 border-bottom">
+            <div class="input-group">
+                <label asp-for="Source" class="input-group-text control-label col-3"></label>
+                <input asp-for="Source" class="form-control rounded-end-2 col-9" />
+                <span asp-validation-for="Source" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="input-group row py-1 border-bottom">
+            <div class="input-group">
+                <label asp-for="System" class="input-group-text control-label col-3"></label>
+                <input asp-for="System" class="form-control rounded-end-2 col-9" />
+                <span asp-validation-for="System" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group d-none">
+            <p>@Html.HiddenFor(item => item.Author)</p> <!-- Prevents author field from being set to NULL when edited -->
+        </div>
+        <div class="input-group row py-1 border-bottom">
+            <div class="input-group">
+                <label asp-for="ReleaseDate" class="input-group-text control-label col-3"></label>
+                <input asp-for="ReleaseDate" class="form-control rounded-end-2 col-9" />
+                <span asp-validation-for="ReleaseDate" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="input-group row py-1 border-bottom">
+            <div class="input-group">
+                <label asp-for="Link" class="input-group-text control-label col-3"></label>
+                <input asp-for="Link" class="form-control rounded-end-2 col-9" />
+                <span asp-validation-for="Link" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- TinyMCE integrated WYSIWYG editor for Content field -->
+    <div class="form-group mb-3 pt-3" style="min-width: 35vw !important; width: 70vw; height: 100% !important">
+        <textarea asp-for="Content" class="form-control text-muted"></textarea>
+        <span asp-validation-for="Content" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <input type="submit" value="Save" class="btn btn-primary" />
+    </div>
+</form>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

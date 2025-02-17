@@ -1,5 +1,10 @@
-﻿@model Super_Simple_Homebrew_Hoster.Models.HomebrewItem
-@using Microsoft.AspNetCore.Html;
+﻿@using Microsoft.AspNetCore.Html;
+@model Super_Simple_Homebrew_Hoster.Models.HomebrewItem
+
+@using Microsoft.AspNetCore.Identity
+@using Super_Simple_Homebrew_Hoster.Areas.Identity.Data;
+@inject SignInManager<HomebrewUser> SignInManager
+@inject UserManager<HomebrewUser> UserManager
 
 @{
     ViewData["Title"] = "Details";
@@ -9,72 +14,55 @@
 
 <h1>Details of @Html.DisplayFor(model => model.Title)</h1>
 
-<div>
-    @if (User.Identity.IsAuthenticated) {
-       <p><a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |</p>
+<div class="d-flex flex-row">
+    <p><a class="me-1" asp-action="Index">Back to Index</a></p>
+    @if (UserManager.GetUserAsync(User).Result?.UserName == Model?.Author || User.IsInRole("Admin")) {
+    	<p class="me-1">| <a asp-action="Edit" asp-route-id="@Model?.Id" class="link-success">Edit</a></p>
+        <p class="me-1">| <a asp-action="Delete" asp-route-id="@Model?.Id" class="link-danger">Delete</a></p>
     }
-    <a asp-action="Index">Back to List</a>
 </div>
 
-<!-- Show column titles and data for the item; dt/dd classes are for presentation via bootstrap -->
+<!-- Show column titles and data for the item -->
 <div>
     <hr />
-    <dl class="row">
-        <dt class="py-1 col-sm-2">
-            @Html.DisplayNameFor(model => model.Title)
-        </dt>
-        <dd class="py-1 col-sm-10">
-            @Html.DisplayFor(model => model.Title)
-        </dd>
-        <dt class="py-1 col-sm-2">
-            @Html.DisplayNameFor(model => model.Type)
-        </dt>
-        <dd class="py-1 col-sm-10">
-            @Html.DisplayFor(model => model.Type)
-        </dd>
-        <dt class="py-1 col-sm-2">
-            @Html.DisplayNameFor(model => model.Version)
-        </dt>
-        <dd class="py-1 col-sm-10">
-            @Html.DisplayFor(model => model.Version)
-        </dd>
-        <dt class="py-1 col-sm-2">
-            @Html.DisplayNameFor(model => model.Source)
-        </dt>
-        <dd class="py-1 col-sm-10">
-            @Html.DisplayFor(model => model.Source)
-        </dd>
-        <dt class="py-1 col-sm-2">
-            @Html.DisplayNameFor(model => model.System)
-        </dt>
-        <dd class="py-1 col-sm-10">
-            @Html.DisplayFor(model => model.System)
-        </dd>
-        <dt class="py-1 col-sm-2">
-            @Html.DisplayNameFor(model => model.Author)
-        </dt>
-        <dd class="py-1 col-sm-10">
-            @Html.DisplayFor(model => model.Author)
-        </dd>
-        <dt class="py-1 col-sm-2">
-            @Html.DisplayNameFor(model => model.ReleaseDate)
-        </dt>
-        <dd class="py-1 col-sm-10">
-            @Html.DisplayFor(model => model.ReleaseDate)
-        </dd>
-        <dt class="py-1 col-sm-2">
-            @Html.DisplayNameFor(model => model.Link)
-        </dt>
-        <dd class="py-1 col-sm-10">
-            @Html.DisplayFor(model => model.Link)
-        </dd>
-        <dt class="py-1 col-sm-2">
-            @Html.DisplayNameFor(model => model.Content)
-        </dt>
-	</dl>
+    <div class="container">
+        <div class="row py-1 border-bottom">
+            <div class="col-2"><b>@Html.DisplayNameFor(model => model.Title)</b></div>
+            <div class="col-10">@Html.DisplayFor(model => model.Title)</div>
+        </div>
+        <div class="row py-1 border-bottom">
+            <div class="col-2"><b>@Html.DisplayNameFor(model => model.Type)</b></div>
+            <div class="col-10">@Html.DisplayFor(model => model.Type)</div>
+        </div>
+        <div class="row py-1 border-bottom">
+            <div class="col-2"><b>@Html.DisplayNameFor(model => model.Version)</b></div>
+            <div class="col-10">@Html.DisplayFor(model => model.Version)</div>
+        </div>
+        <div class="row py-1 border-bottom">
+            <div class="col-2"><b>@Html.DisplayNameFor(model => model.Source)</b></div>
+            <div class="col-10">@Html.DisplayFor(model => model.Source)</div>
+        </div>
+        <div class="row py-1 border-bottom">
+            <div class="col-2"><b>@Html.DisplayNameFor(model => model.System)</b></div>
+            <div class="col-10">@Html.DisplayFor(model => model.System)</div>
+        </div>
+        <div class="row py-1 border-bottom">
+            <div class="col-2"><b>@Html.DisplayNameFor(model => model.Author)</b></div>
+            <div class="col-10">@Html.DisplayFor(model => model.Author)</div>
+        </div>
+        <div class="row py-1 border-bottom">
+            <div class="col-2"><b>@Html.DisplayNameFor(model => model.ReleaseDate)</b></div>
+            <div class="col-10">@Html.DisplayFor(model => model.ReleaseDate)</div>
+        </div>
+        <div class="row py-1 border-bottom">
+            <div class="col-2"><b>@Html.DisplayNameFor(model => model.Link)</b></div>
+            <div class="col-10"><a href="@Model?.Link">@Html.DisplayFor(model => model.Link)</a></div>
+        </div>
+    </div>
+
     <div>
         <!-- TinyMCE integrated WYSIWYG editor for Content field -->
-        <div class="form-group mb-3" style="min-width: 35vw !important; width: 70vw; height: 100% !important">
+        <div class="form-group mb-3 pt-3" style="min-width: 35vw !important; width: 70vw; height: 100% !important">
             <textarea asp-for="Content" class="form-control text-muted">
                 @mdContent
             </textarea>

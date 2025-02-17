@@ -28,7 +28,7 @@ namespace Super_Simple_Homebrew_Hoster.Controllers
         }
 
         // GET: HomebrewItems
-        public async Task<IActionResult> Index(string itemSystem, string titleSearch)
+        public async Task<IActionResult> Index(string itemSystem, string titleSearch, string sourceSearch, string authorSearch)
         {
             if (_context.HomebrewItem == null)
             {
@@ -45,11 +45,19 @@ namespace Super_Simple_Homebrew_Hoster.Controllers
 
             if (!String.IsNullOrEmpty(titleSearch))
             {
-                homebrewItems = homebrewItems.Where(s => s.Title!.ToUpper().Contains(titleSearch.ToUpper()));
+                homebrewItems = homebrewItems.Where(item => item.Title!.ToUpper().Contains(titleSearch.ToUpper()));
+            }
+            if (!String.IsNullOrEmpty(sourceSearch))
+            {
+                homebrewItems = homebrewItems.Where(item => item.Source!.ToUpper().Contains(sourceSearch.ToUpper()));
+            }
+            if (!String.IsNullOrEmpty(authorSearch))
+            {
+                homebrewItems = homebrewItems.Where(item => item.Author!.ToUpper().Contains(authorSearch.ToUpper()));
             }
             if (!String.IsNullOrEmpty(itemSystem))
             {
-                homebrewItems = homebrewItems.Where(x => x.System == itemSystem);
+                homebrewItems = homebrewItems.Where(item => item.System == itemSystem);
             }
 
             var itemSystemVM = new HomebrewItemSystemViewModel

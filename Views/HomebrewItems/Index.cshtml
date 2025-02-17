@@ -16,27 +16,54 @@
 <p>A list of TTRPG homebrew creations</p>
 
 <!-- Users without accounts are not allowed to create, edit or delete items -->
-@if (User.Identity.IsAuthenticated) {
-    <p>
-        <a asp-action="Create">+ Create New</a>
-    </p>
-}
+<div class="d-flex flex-row pb-2">
+    @if (User.Identity.IsAuthenticated) {
+        <a asp-action="Create" class="btn btn-primary me-2">
+            + Create New
+        </a>
+    }
+	<button type="button" class="btn btn-success" data-bs-toggle="collapse" data-bs-target="#collapseSearch" aria-controls="collapseSearch" aria-expanded="false">
+        Search
+    </button>
+    @section Scripts {
+        <script type="text/javascript">
+            const collapseSearch = new bootstrap.Collapse('#collapseSearch', {toggle: true})
+        </script>
+    }
+</div>
 
-<!-- Dropdown for the tabletop system to search for -->
-<form asp-controller="HomebrewItems" asp-action="Index" method="get">
-	<p>
-        System(s): 
-        <select asp-for="ItemSystem" asp-items="Model.Systems">
-            
-            <option value="">All</option>
-        </select>
-
-        <p>
-            <label>Title: <input type="text" name="titleSearch" /></label>
-		    <input type="submit" value="Search" />
-	    </p>
-    </p>
-</form>
+<div class="collapse" id="collapseSearch">
+    <div class="border border-success bg-success-subtle p-2 rounded-4 w-50">
+        <form asp-controller="HomebrewItems" asp-action="Index" method="get">
+	        <div class="d-grid gap-2 py-1">
+                <!-- Reset searches -->
+                <input type="submit" value="Reset" class="btn btn-warning" />
+                <!-- Dropdown for the tabletop system to search for -->
+                <div class="px-2 d-flex flex-row">
+                    <label class="mt-1 me-2">System:</label> 
+                    <select asp-for="ItemSystem" asp-items="Model.Systems" class="form-select">
+                        <option value="">All</option>
+                    </select>
+                </div>
+                <!-- Title search -->
+                <div class="px-2 d-flex flex-row">
+                    <input type="text" name="titleSearch" class="form-control" placeholder="Title" />
+		            <input type="submit" value="Search" class="btn btn-success btn-sm" />
+	            </div>
+                <!-- Source search -->
+                <div class="px-2 d-flex flex-row">
+                    <input type="text" name="sourceSearch" class="form-control" placeholder="Source" />
+                    <input type="submit" value="Search" class="btn btn-success btn-sm" />
+                </div>
+                <!-- Author search -->
+                <div class="px-2 d-flex flex-row">
+                    <input type="text" name="authorSearch" class="form-control" placeholder="Author" />
+                    <input type="submit" value="Search" class="btn btn-success btn-sm" />
+                </div>
+            </div>
+	    </form>
+    </div>
+</div>
 
 <!-- 
     Main index table 
@@ -94,9 +121,9 @@
             @{
                 if ((User.Identity.IsAuthenticated && currentUser.BrewsCreated.Contains(item.Id)) || User.IsInRole ("Admin")) {
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                     <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    <a class="link-success" asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a class="link-danger" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
                 </td>
                 } else if (!User.Identity.IsAuthenticated || currentUser == null) {
                     <td>
