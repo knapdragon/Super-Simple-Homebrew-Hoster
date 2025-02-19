@@ -28,7 +28,7 @@ namespace Super_Simple_Homebrew_Hoster.Controllers
         }
 
         // GET: HomebrewItems
-        public async Task<IActionResult> Index(string itemSystem, string titleSearch, string sourceSearch, string authorSearch)
+        public async Task<IActionResult> Index(string titleSearch, string sourceSearch, string authorSearch, string itemSystem)
         {
             if (_context.HomebrewItem == null)
             {
