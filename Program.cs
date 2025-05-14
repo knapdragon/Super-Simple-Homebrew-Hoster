@@ -63,8 +63,8 @@ namespace Super_Simple_Homebrew_Hoster
 
                 var userManager = services.GetRequiredService<UserManager<HomebrewUser>>(); // Get userManager service with custom HomebrewUser type, for improved customisation
 
-                string adminEmail = "admin@admin.com";  // placeholder; going to want improved security, of course
-                string adminPassword = "Test1234,";     // placeholder
+                string adminEmail = "fakeEmail@provider.com";  // obfuscation of actual details
+                string adminPassword = "TestP4ssword!";     // as above
 
                 // If the admin user's email doesn't exist
                 if (await userManager.FindByEmailAsync(adminEmail) == null) {
