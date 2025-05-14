@@ -1,5 +1,5 @@
 /**
- * TinyMCE version 7.5.1 (TBD)
+ * TinyMCE version 7.7.0 (TBD)
  */
 
 (function () {
@@ -633,6 +633,11 @@
       {
         key: 'editimage',
         name: 'Image Editing',
+        type: 'premium'
+      },
+      {
+        key: 'uploadcare',
+        name: 'Image Optimizer Powered by Uploadcare',
         type: 'premium'
       },
       {
